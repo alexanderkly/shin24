@@ -1,0 +1,255 @@
+import openpyxl
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+import json
+
+service = Service(executable_path="/home/alex/PycharmProjects/pythonProject/chromedriver/chromedriver")
+
+options = webdriver.ChromeOptions()
+options.add_argument("--start-maximized")
+options.add_argument("--proxy-server=194.67.217.8:9474")
+# options.add_argument(
+#     f"user-agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'")
+options.add_argument('--disable-blink-features=AutomationControlled')
+
+
+def scroll(location):
+    driver.execute_script("arguments[0].scrollIntoView();", location)
+
+
+def is_visible_by_ID(ID):
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.ID, ID)))
+
+
+def is_visible_by_xpath(xpath):
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, xpath)))
+
+
+def switch_to_page(page):
+    driver.execute_script(f"window.open('{page}','_blank');")
+    driver.switch_to.window(driver.window_handles[1])
+
+
+def switch_back(window):
+    driver.close()
+    driver.switch_to.window((driver.window_handles[window]))
+
+
+def save_cookies(driver, filename):
+    cookies = driver.get_cookies()
+    with open(filename, 'w') as f:
+        json.dump(cookies, f)
+
+
+def first_login():
+    login, password = '*', '*'
+    is_visible_by_xpath("//*[@class='sc-82788fd1-5 eBQWuZ e-link e-link--themeDefault']")
+    login_input = driver.find_element(By.XPATH, "//*[@id='signInLoginInput']")
+    login_input.send_keys(login)
+    time.sleep(1)
+    pass_input = driver.find_element(By.XPATH, "//*[@id='signInPasswordInput']")
+    pass_input.send_keys(password)
+    pass_input.send_keys(Keys.ENTER)
+    save_cookies(driver, 'emex.json')
+
+
+# def taking_data():
+#     is_visible_by_xpath("//*[@class='sc-87ab0485-1 jCLOrQ']")
+#     name = driver.find_element(By.XPATH, "//*[@class='sc-87ab0485-1 jCLOrQ']").text
+#     price = driver.find_element(By.XPATH, "//*[@class='sc-87ab0485-13 gcEFQv']").text
+#     brand = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[1]").text
+#     shirina = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[2]").text
+#     visota = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[3]").text
+#     diametr = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[4]").text
+#     index_sk = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[5]").text
+#     index_ng = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[6]").text
+#     sezon = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[7]").text
+#     type = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[8]").text
+#     try:
+#         if driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[9]").text == "Усиленная шина":
+#             usil = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[9]").text
+#     except:
+#         usil =''
+#
+#
+#     try:
+#         if driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[10]").text == "Run-Flat":
+#             run_flat = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[10]").text
+#
+#     except:
+#         run_flat = ''
+#
+#     try:
+#         if driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[11]").text == "Run-Flat":
+#             model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[11]").text
+#         elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[12]").text == "Run-Flat":
+#                 model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[12]").text
+#         elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[13]").text == "Run-Flat":
+#              model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[13]").text
+#         elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[14]").text == "Run-Flat":
+#             model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[14]").text
+#         elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[15]").text == "Run-Flat":
+#             model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[15]").text
+#     except:
+#         model=''
+#
+#
+#
+#
+#
+#     try:
+#         photo = driver.find_element(By.XPATH,
+#                                     "//div[@class='sc-43372a07-0 fXKdeq swiper-slide swiper-slide-active']/div/img").get_attribute(
+#             "src")
+#     except:
+#         photo = ''
+#     row = name, price, brand, shirina, visota, diametr, index_sk, index_ng, sezon, type, usil, run_flat, model, photo
+#     worksheet.append(row)
+#     row = []
+
+def parsing(page_count):
+    if page_count == 0:
+        count = 1
+    else:
+        count = 64 * page_count + 1
+    product_elements = driver.find_elements(By.XPATH, "//*[@class='sc-9d41e88b-4 ftuDjW']")
+    for el in product_elements:
+
+        try:
+            url_el = el.find_element(By.XPATH, f"(//*[@class='sc-9d41e88b-6 fGMmTh'])[{count}]")
+        except:
+            count += 1
+            continue
+
+        if count == 64:
+            count+=1
+            continue
+        usil = 'отсутствует'
+        run_flat = 'отсутствует'
+
+        url_el = url_el.get_attribute('href')
+        switch_to_page(url_el)
+        is_visible_by_xpath("//*[@class='sc-87ab0485-1 jCLOrQ']")
+        name = driver.find_element(By.XPATH, "//*[@class='sc-87ab0485-1 jCLOrQ']").text
+        try:
+            price = driver.find_element(By.XPATH, "//*[@class='sc-87ab0485-13 gcEFQv']").text
+        except:
+            price = 'Ошибка цены'
+        brand = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[1]").text
+        shirina = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[2]").text
+        visota = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[3]").text
+        diametr = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[4]").text
+        index_sk = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[5]").text
+        index_ng = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[6]").text
+        sezon = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[7]").text
+        type = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[8]").text
+        try:
+            if driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[9]").text == "Усиленная шина":
+                usil = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[9]").text
+        except:
+            usil = 'отсутствует'
+
+        try:
+            if driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[10]").text == "Run-Flat":
+                run_flat = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[10]").text
+        except:
+            run_flat = ''
+
+        try:
+            if driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[11]").text == "Модель":
+                model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[11]").text
+            elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[12]").text == "Модель":
+                model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[12]").text
+            elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[13]").text == "Модель":
+                model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[13]").text
+            elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[14]").text == "Модель":
+                model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[14]").text
+            elif driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-7 eNJTOu'])[15]").text == "Модель":
+                model = driver.find_element(By.XPATH, "(//*[@class='sc-3e638be0-8 fJccrL'])[15]").text
+        except:
+            model = ''
+        try:
+            photo1 = driver.find_element(By.XPATH,
+                                         "//div[@class='sc-43372a07-0 fXKdeq swiper-slide swiper-slide-active']/div/img").get_attribute(
+                "src")
+        except:
+            photo1 = ''
+
+        try:
+            photo2 = driver.find_element(By.XPATH,
+                                         "(//div[@class='sc-43372a07-1 jivDtw swiper-slide swiper-slide-next']/img)[1]").get_attribute(
+                "src")
+        except:
+            photo2 = ''
+
+        try:
+            photo3 = driver.find_element(By.XPATH,
+                                         "(//div[@class='sc-43372a07-1 jivDtw swiper-slide']/img)[1]").get_attribute(
+                "src")
+        except:
+            photo3 = ''
+
+        row = url_el, name, price, brand, shirina, visota, diametr, index_sk, index_ng, sezon, type, usil, run_flat, model, photo1, photo2, photo3
+        worksheet.append(row)
+        switch_back(0)
+        print(count)
+        count += 1
+
+
+def load_cookies(filename):
+    with open(filename, 'r') as f:
+        cookies = json.load(f)
+    for cookie in cookies:
+        driver.add_cookie(cookie)
+
+
+def next():
+    is_visible_by_xpath("//*[@class='sc-a29c4702-26 gpEprw e-button e-button--sizeMedium e-button--themeBlack']")
+    but = driver.find_element(By.XPATH,
+                              "//*[@class='sc-a29c4702-26 gpEprw e-button e-button--sizeMedium e-button--themeBlack']")
+    scroll(but)
+    time.sleep(16)
+    but.click()
+    time.sleep(12)
+
+
+try:
+    link = 'https://emex.ru/'
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get(link)
+    is_visible_by_xpath("//*[@class='sc-82788fd1-5 eBQWuZ e-link e-link--themeDefault']")
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+
+    login_but = driver.find_element(By.XPATH, "//*[@class='sc-82788fd1-7 kaCbkV']")
+    login_but.click()
+    time.sleep(4)
+
+    first_login()
+    # load_cookies('emex.json')
+    time.sleep(2)
+    driver.refresh()
+    time.sleep(2)
+    driver.get(
+        'https://emex.ru/catalogs2/201?sortMode=Rating%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20&sortDirection=2%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20&filters=0%5Bid%5D=Make;0%5Bvalues%5D%5B0%5D=110367909')
+    time.sleep(5)
+    page_count = 0
+    while True:
+        parsing(page_count)
+        next()
+        page_count += 1
+
+
+
+
+
+
+finally:
+    workbook.save(f'Michlein.xlsx')
+    driver.close()
+    driver.quit()
